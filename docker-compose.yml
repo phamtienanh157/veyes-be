@@ -5,8 +5,8 @@ services:
     image: postgres:latest
     ports:
     - "5432:5432"
-    volumes:
-    - .:/Users
+    # volumes:
+    # - .:/Users
     env_file:
     - docker.env
     networks:
