@@ -1,6 +1,8 @@
 ## Config git
-- user.name: phamtienanh
-- user.email: phamtienanh157@gmail.com
+```bash
+$ git config user.name phamtienanh
+$ git config user.email phamtienanh157@gmail.com
+```
 
 ## Config .env
 
