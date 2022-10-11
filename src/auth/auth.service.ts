@@ -11,7 +11,8 @@ import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { IAccessToken } from './types/access-token.interface';
 import { IJWTPayload } from './types/jwt-payload.interface';
-import { User } from './user.entity';
+import { User } from './entity/user.entity';
+import { EErrorCode, ERole } from 'src/common/constants';
 
 @Injectable()
 export class AuthService {

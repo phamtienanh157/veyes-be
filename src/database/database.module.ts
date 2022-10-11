@@ -21,6 +21,7 @@ import { configValidationSchema } from 'src/config/config.schema';
         database: configService.get('POSTGRES_DB'),
         synchronize: true,
         autoLoadEntities: true,
+        entities: [__dirname + '/../**/*.entity.{js,ts}'],
       }),
     }),
   ],
