@@ -3,7 +3,6 @@ import {
   Entity,
   OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { CartEyewear } from './cartEyewear.entity';
 import { Order } from './order.entity';
@@ -15,9 +14,6 @@ export class Cart {
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
 
   @OneToMany(() => Order, (order: Order) => order.cart)
   order: Order[];

@@ -13,7 +13,6 @@ import { CommentModule } from './comment/comment.module';
     DatabaseModule,
     AuthModule,
     EyewearModule,
-    EyewearModule,
     OrderModule,
     AccountModule,
     CommentModule,
