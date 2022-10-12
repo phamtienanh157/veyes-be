@@ -27,7 +27,7 @@ export class Eyewear {
   price: number;
 
   @Column()
-  maxQuantity: string;
+  maxQuantity: number;
 
   @Column()
   code: string;

@@ -13,4 +13,8 @@ export class EyewearService {
   async getAll(): Promise<Eyewear[]> {
     return this.eyewearRepository.find();
   }
+
+  async getOneByCode(code: string): Promise<Eyewear> {
+    return this.eyewearRepository.findOneBy({ code });
+  }
 }
