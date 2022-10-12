@@ -1,6 +1,6 @@
 import { ERole } from 'src/common/constants';
 import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
-// import { Customer } from './customer.entity';
+import { Customer } from './customer.entity';
 
 @Entity()
 export class User {
@@ -20,6 +20,6 @@ export class User {
   })
   role: ERole;
 
-  // @OneToOne(() => Customer, (customer) => customer.user)
-  // customer: Customer;
+  @OneToOne(() => Customer, (customer) => customer.user)
+  customer: Customer;
 }

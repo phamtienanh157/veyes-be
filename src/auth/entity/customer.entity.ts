@@ -3,6 +3,7 @@ import { Order } from 'src/order/entity/order.entity';
 import {
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -27,6 +28,7 @@ export class Customer {
   address: string;
 
   @OneToOne(() => User)
+  @JoinColumn()
   user: User;
 
   @OneToMany(() => Order, (order: Order) => order.customer)

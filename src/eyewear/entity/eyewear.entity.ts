@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Brand } from './brand.entity';
+import ColorCollection from './colorCollection.entity';
 import ImageCollection from './imageCollection.entity';
 import Type from './type.entity';
 
@@ -45,6 +46,12 @@ export class Eyewear {
     (imageCollection: ImageCollection) => imageCollection.eyewear,
   )
   imageCollection: ImageCollection[];
+
+  @OneToMany(
+    () => ColorCollection,
+    (colorCollection: ColorCollection) => colorCollection.eyewear,
+  )
+  colorCollection: ColorCollection[];
 
   @OneToMany(
     () => CartEyewear,
