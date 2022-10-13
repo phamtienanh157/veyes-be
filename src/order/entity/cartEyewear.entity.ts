@@ -10,6 +10,9 @@ export class CartEyewear {
   @Column()
   quantity: number;
 
+  @Column()
+  colorCode: string;
+
   @ManyToOne(() => Eyewear, (eyewear: Eyewear) => eyewear.cartEyewear)
   eyewear: Eyewear;
 

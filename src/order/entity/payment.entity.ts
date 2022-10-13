@@ -9,9 +9,6 @@ export class Payment {
   @Column()
   public methodName: string;
 
-  @Column()
-  public price: number;
-
   @OneToMany(() => Order, (order: Order) => order.payment)
   public order: Order[];
 }

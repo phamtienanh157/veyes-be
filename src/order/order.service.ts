@@ -22,6 +22,8 @@ export class OrderService {
     private readonly shipmentRepository: Repository<Shipment>,
     @InjectRepository(Eyewear)
     private readonly eyewearRepository: Repository<Eyewear>,
+    @InjectRepository(CartEyewear)
+    private readonly cartEyewearRepository: Repository<CartEyewear>,
   ) {}
 
   async createOrder(body: CreateOrderDto) {
@@ -45,6 +47,8 @@ export class OrderService {
       cartEyewear.quantity = item.quantity;
       cartEyewear.cart = newCart;
       cartEyewear.eyewear = eyewear;
+      cartEyewear.colorCode = item.colorCode;
+      this.cartEyewearRepository.save(cartEyewear);
     });
 
     const order = new Order();
