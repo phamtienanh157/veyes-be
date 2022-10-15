@@ -15,16 +15,16 @@ export class Customer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   phoneNumber: string;
 
-  @Column()
+  @Column({ nullable: true })
   email: string;
 
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
   @OneToOne(() => User)
@@ -32,7 +32,7 @@ export class Customer {
   user: User;
 
   @OneToMany(() => Order, (order: Order) => order.customer)
-  public order: Order[];
+  order: Order[];
 
   @OneToMany(() => Comment, (comment: Comment) => comment.customer)
   comment: Comment[];

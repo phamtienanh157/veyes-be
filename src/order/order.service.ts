@@ -58,4 +58,12 @@ export class OrderService {
     order.shipment = shipment;
     return this.orderRepository.save(order);
   }
+
+  async getPayment() {
+    return await this.paymentRepository.find();
+  }
+
+  async getShipment() {
+    return await this.shipmentRepository.find();
+  }
 }

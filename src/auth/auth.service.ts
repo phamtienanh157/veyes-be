@@ -9,15 +9,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { IAccessToken } from './types/access-token.interface';
-import { IJWTPayload } from './types/jwt-payload.interface';
 import { User } from './entity/user.entity';
 import { EErrorCode, ERole } from 'src/common/constants';
+import { IAccessToken, IJWTPayload, ISignInRes } from './auth.interface';
+import { Customer } from './entity/customer.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
+    @InjectRepository(User) private customerRepository: Repository<Customer>,
     private jwtService: JwtService,
   ) {}
 
@@ -26,10 +27,13 @@ export class AuthService {
       const { username, password } = authCredentialsDto;
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(password, salt);
-      await this.usersRepository.save({
+      const user = await this.usersRepository.save({
         username,
         password: hashedPassword,
         role: ERole.USER,
+      });
+      await this.customerRepository.save({
+        user,
       });
     } catch (error) {
       if (error.code === EErrorCode.ConflictException) {
@@ -39,14 +43,14 @@ export class AuthService {
     }
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<IAccessToken> {
+  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<ISignInRes> {
     try {
       const { username, password } = authCredentialsDto;
       const user = await this.usersRepository.findOneBy({ username });
       if (user && (await bcrypt.compare(password, user.password))) {
         const payload: IJWTPayload = { username, role: user.role };
-        const accessToken: string = await this.jwtService.sign(payload);
-        return { accessToken };
+        const accessToken: string = this.jwtService.sign(payload);
+        return { accessToken, userId: user.id };
       } else {
         throw new UnauthorizedException('Please check your login credentials!');
       }

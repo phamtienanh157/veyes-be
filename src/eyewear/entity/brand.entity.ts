@@ -4,11 +4,11 @@ import { Eyewear } from './eyewear.entity';
 @Entity()
 export class Brand {
   @PrimaryGeneratedColumn()
-  public id: number;
+  id: number;
 
   @Column()
-  public name: string;
+  name: string;
 
   @OneToMany(() => Eyewear, (eyewear: Eyewear) => eyewear.brand)
-  public eyewear: Eyewear[];
+  eyewear: Eyewear[];
 }
