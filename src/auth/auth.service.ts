@@ -11,7 +11,7 @@ import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User } from './entity/user.entity';
 import { EErrorCode, ERole } from 'src/common/constants';
-import { IAccessToken, IJWTPayload, ISignInRes } from './auth.interface';
+import { IJWTPayload, ISignInRes } from './auth.interface';
 import { Customer } from './entity/customer.entity';
 
 @Injectable()

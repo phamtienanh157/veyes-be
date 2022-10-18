@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Customer } from 'src/auth/entity/customer.entity';
+import { User } from 'src/auth/entity/user.entity';
 import { Eyewear } from 'src/eyewear/entity/eyewear.entity';
 import { Repository } from 'typeorm';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -24,10 +26,22 @@ export class OrderService {
     private readonly eyewearRepository: Repository<Eyewear>,
     @InjectRepository(CartEyewear)
     private readonly cartEyewearRepository: Repository<CartEyewear>,
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async createOrder(body: CreateOrderDto) {
-    const { totalPrice, paymentId, shipmentId, cart } = body;
+    const { totalPrice, paymentId, shipmentId, cart, customer, userId } = body;
+
+    const user = await this.userRepository.findOneBy({ id: userId });
+    const thisCustomer = await this.customerRepository.findOneBy({ user });
+    thisCustomer.address = customer.address;
+    thisCustomer.name = customer.name;
+    thisCustomer.email = customer.email;
+    thisCustomer.phoneNumber = customer.phoneNumber;
+    await this.customerRepository.save(thisCustomer);
 
     const payment = await this.paymentRepository.findOne({
       where: { id: paymentId },
@@ -56,6 +70,7 @@ export class OrderService {
     order.totalPrice = totalPrice;
     order.payment = payment;
     order.shipment = shipment;
+    order.customer = thisCustomer;
     return this.orderRepository.save(order);
   }
 

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Customer } from 'src/auth/entity/customer.entity';
+import { User } from 'src/auth/entity/user.entity';
 import { Eyewear } from 'src/eyewear/entity/eyewear.entity';
 import { Cart } from './entity/cart.entity';
 import { CartEyewear } from './entity/cartEyewear.entity';
@@ -18,6 +20,8 @@ import { OrderService } from './order.service';
       Shipment,
       Eyewear,
       CartEyewear,
+      Customer,
+      User,
     ]),
   ],
   controllers: [OrderController],

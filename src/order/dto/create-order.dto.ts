@@ -6,8 +6,13 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { Customer } from 'src/auth/entity/customer.entity';
 
 export class CreateOrderDto {
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
+
   @IsNotEmpty()
   @IsNumber()
   totalPrice: number;
@@ -19,6 +24,10 @@ export class CreateOrderDto {
   @IsNotEmpty()
   @IsNumber()
   shipmentId: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  customer: Customer;
 
   @IsNotEmpty()
   @IsArray()
