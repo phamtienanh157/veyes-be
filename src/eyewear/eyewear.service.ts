@@ -27,6 +27,14 @@ export class EyewearService {
   }
 
   async getOneByCode(code: string): Promise<Eyewear> {
-    return this.eyewearRepository.findOneBy({ code });
+    return this.eyewearRepository.findOne({
+      where: { code },
+      relations: {
+        brand: true,
+        type: true,
+        colorCollection: true,
+        imageCollection: true,
+      },
+    });
   }
 }
