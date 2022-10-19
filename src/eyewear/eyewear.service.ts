@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { CreateEyewearDto } from './dto/create-order.dto';
 import { Brand } from './entity/brand.entity';
 import { Eyewear } from './entity/eyewear.entity';
 import Type from './entity/type.entity';
@@ -49,5 +50,10 @@ export class EyewearService {
   async getListType(): Promise<IListTypeRes[]> {
     const list = await this.typeRepository.find();
     return list;
+  }
+
+  async saveEyewear(body: CreateEyewearDto): Promise<Eyewear> {
+    return this.eyewearRepository.save(body);
+    // return list;
   }
 }
