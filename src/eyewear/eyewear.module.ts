@@ -3,10 +3,11 @@ import { EyewearService } from './eyewear.service';
 import { EyewearController } from './eyewear.controller';
 import { Eyewear } from './entity/eyewear.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import ColorCollection from './entity/colorCollection.entity';
+import { Brand } from './entity/brand.entity';
+import Type from './entity/type.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Eyewear, ColorCollection])],
+  imports: [TypeOrmModule.forFeature([Eyewear, Brand, Type])],
   providers: [EyewearService],
   controllers: [EyewearController],
 })

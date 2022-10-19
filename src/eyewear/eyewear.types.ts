@@ -13,3 +13,13 @@ export interface IColor {
   name: string;
   code: string;
 }
+
+export interface IListBrandRes {
+  id: number;
+  name: string;
+}
+
+export interface IListTypeRes {
+  id: number;
+  name: string;
+}

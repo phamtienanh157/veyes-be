@@ -15,4 +15,16 @@ export class EyewearController {
   getEyewearByCode(@Query('code') code: string) {
     return this.eyewearService.getOneByCode(code);
   }
+
+  @Get('brands')
+  @HttpCode(200)
+  async getListBrand() {
+    return this.eyewearService.getListBrand();
+  }
+
+  @Get('types')
+  @HttpCode(200)
+  async getListType() {
+    return this.eyewearService.getListType();
+  }
 }
