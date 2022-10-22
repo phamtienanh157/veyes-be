@@ -3,7 +3,6 @@ import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
 import {
   Column,
   Entity,
-  JoinColumn,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,

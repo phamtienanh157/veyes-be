@@ -1,6 +1,11 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import ColorCollection from '../entity/colorCollection.entity';
+import ImageCollection from '../entity/imageCollection.entity';
 
 export class CreateEyewearDto {
+  @IsNumber()
+  id: number;
+
   @IsNotEmpty()
   @IsString()
   name: string;
@@ -32,4 +37,12 @@ export class CreateEyewearDto {
   @IsNotEmpty()
   @IsNumber()
   typeId: number;
+
+  @IsNotEmpty()
+  @IsArray()
+  colorCollection: ColorCollection[];
+
+  @IsNotEmpty()
+  @IsArray()
+  imageCollection: ImageCollection[];
 }

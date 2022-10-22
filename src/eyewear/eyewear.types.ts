@@ -23,3 +23,11 @@ export interface IListTypeRes {
   id: number;
   name: string;
 }
+
+export interface ISaveEyewearRes {
+  message: string;
+}
+
+export interface IEyewearRes {
+  message: string;
+}

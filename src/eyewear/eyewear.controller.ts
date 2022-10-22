@@ -1,7 +1,17 @@
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
-import { CreateEyewearDto } from './dto/create-order.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { CreateEyewearDto } from './dto/create-eyewear.dto';
+import { DeleteEyewearDto } from './dto/delete-eyewear.dto';
 import { Eyewear } from './entity/eyewear.entity';
 import { EyewearService } from './eyewear.service';
+import { IEyewearRes, ISaveEyewearRes } from './eyewear.types';
 
 @Controller('eyewears')
 export class EyewearController {
@@ -32,7 +42,13 @@ export class EyewearController {
 
   @Post()
   @HttpCode(200)
-  async saveEyewear(@Body() body: CreateEyewearDto): Promise<Eyewear> {
+  async saveEyewear(@Body() body: CreateEyewearDto): Promise<ISaveEyewearRes> {
     return this.eyewearService.saveEyewear(body);
+  }
+
+  @Delete()
+  @HttpCode(200)
+  async deleteOne(@Query('id') id: number): Promise<IEyewearRes> {
+    return this.eyewearService.deleteOne(id);
   }
 }

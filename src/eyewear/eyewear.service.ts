@@ -1,11 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEyewearDto } from './dto/create-order.dto';
+import { CreateEyewearDto } from './dto/create-eyewear.dto';
+import { DeleteEyewearDto } from './dto/delete-eyewear.dto';
 import { Brand } from './entity/brand.entity';
+import ColorCollection from './entity/colorCollection.entity';
 import { Eyewear } from './entity/eyewear.entity';
+import ImageCollection from './entity/imageCollection.entity';
 import Type from './entity/type.entity';
-import { IListBrandRes, IListEyewearRes, IListTypeRes } from './eyewear.types';
+import {
+  IEyewearRes,
+  IListBrandRes,
+  IListEyewearRes,
+  IListTypeRes,
+  ISaveEyewearRes,
+} from './eyewear.types';
+import { isEqual } from 'lodash';
 
 @Injectable()
 export class EyewearService {
@@ -16,6 +26,10 @@ export class EyewearService {
     private readonly brandRepository: Repository<Brand>,
     @InjectRepository(Type)
     private readonly typeRepository: Repository<Type>,
+    @InjectRepository(ColorCollection)
+    private readonly colorCollectionRepository: Repository<ColorCollection>,
+    @InjectRepository(ImageCollection)
+    private readonly imageCollectionRepository: Repository<ImageCollection>,
   ) {}
 
   async getAll(): Promise<IListEyewearRes[]> {
@@ -52,8 +66,63 @@ export class EyewearService {
     return list;
   }
 
-  async saveEyewear(body: CreateEyewearDto): Promise<Eyewear> {
-    return this.eyewearRepository.save(body);
-    // return list;
+  async saveEyewear(body: CreateEyewearDto): Promise<ISaveEyewearRes> {
+    const brand = await this.brandRepository.findOneBy({ id: body.brandId });
+    const type = await this.typeRepository.findOneBy({ id: body.typeId });
+    const eyewear = new Eyewear();
+    if (body.id) eyewear.id = body.id;
+    eyewear.name = body.name;
+    eyewear.description = body.description;
+    eyewear.price = body.price;
+    eyewear.maxQuantity = body.maxQuantity;
+    eyewear.code = body.code;
+    eyewear.thumbnail = body.thumbnail;
+    eyewear.brand = brand;
+    eyewear.type = type;
+    const savedEyewear = await this.eyewearRepository.save(eyewear);
+
+    const listColor = await this.colorCollectionRepository.findBy({ eyewear });
+    const listImage = await this.imageCollectionRepository.findBy({ eyewear });
+
+    const colorCollectionBody = [...body.colorCollection].sort(
+      (a, b) => a.id - b.id,
+    );
+
+    if (JSON.stringify(colorCollectionBody) !== JSON.stringify(listColor)) {
+      await this.colorCollectionRepository.delete({ eyewear });
+      body.colorCollection.forEach(async (item) => {
+        const color = new ColorCollection();
+        color.code = item.code;
+        color.name = item.name;
+        color.eyewear = savedEyewear;
+        await this.colorCollectionRepository.save(color);
+      });
+    }
+    const imageCollectionBody = [...body.imageCollection].sort(
+      (a, b) => a.id - b.id,
+    );
+
+    if (JSON.stringify(imageCollectionBody) !== JSON.stringify(listImage)) {
+      await this.imageCollectionRepository.delete({ eyewear });
+      body.imageCollection.forEach(async (item) => {
+        const image = new ImageCollection();
+        image.url = item.url;
+        image.eyewear = savedEyewear;
+        await this.imageCollectionRepository.save(image);
+      });
+    }
+    return {
+      message: 'Success',
+    };
+  }
+
+  async deleteOne(id: number): Promise<IEyewearRes> {
+    const eyewear = await this.eyewearRepository.findOneBy({ id });
+    await this.colorCollectionRepository.delete({ eyewear });
+    await this.imageCollectionRepository.delete({ eyewear });
+    await this.eyewearRepository.delete(id);
+    return {
+      message: 'Success',
+    };
   }
 }
