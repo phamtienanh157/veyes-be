@@ -1,9 +1,11 @@
-import { Controller, Post, Body, HttpCode, Get } from '@nestjs/common';
+import { IGetOrderRes } from './order.types';
+import { Controller, Post, Body, HttpCode, Get, Query } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
 import { Shipment } from './entity/shipment.entity';
 import { OrderService } from './order.service';
+import { ChangeStatusDto } from './dto/change-status.dto';
 
 @Controller('order')
 export class OrderController {
@@ -25,5 +27,26 @@ export class OrderController {
   @HttpCode(200)
   getShipment(): Promise<Shipment[]> {
     return this.orderService.getShipment();
+  }
+
+  @Get()
+  @HttpCode(200)
+  getListOrder(@Query('id') id: number): Promise<IGetOrderRes[] | Order[]> {
+    if (id) {
+      return this.orderService.getListOrderByCustomer(id);
+    }
+    return this.orderService.getListOrder();
+  }
+
+  @Get('detail')
+  @HttpCode(200)
+  getOrderDetail(@Query('id') id: number) {
+    return this.orderService.getOrderDetail(id);
+  }
+
+  @Post('status')
+  @HttpCode(200)
+  changeStatus(@Body() body: ChangeStatusDto) {
+    return this.orderService.changeStatus(body);
   }
 }

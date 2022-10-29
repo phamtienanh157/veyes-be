@@ -32,8 +32,19 @@ export class EyewearService {
     private readonly imageCollectionRepository: Repository<ImageCollection>,
   ) {}
 
-  async getAll(): Promise<IListEyewearRes[]> {
-    const list = await this.eyewearRepository.find({
+  async getAll(
+    keyword: string,
+    brandId: number,
+    typeId: number,
+    price: number,
+  ): Promise<IListEyewearRes[]> {
+    const brand = await this.brandRepository.findOneBy({ id: brandId });
+    const type = await this.typeRepository.findOneBy({ id: typeId });
+    let list = await this.eyewearRepository.find({
+      where: {
+        brand: brand || false,
+        type: type || false,
+      },
       relations: {
         brand: true,
         type: true,
@@ -41,8 +52,45 @@ export class EyewearService {
         imageCollection: true,
       },
     });
+    if (keyword) {
+      list = list.filter((item) => item.name.toLowerCase().includes(keyword));
+    }
+    if (+price) {
+      list = list.sort(function (a, b) {
+        if (+price === 1) return a.price - b.price;
+        return b.price - a.price;
+      });
+    }
     return list;
   }
+
+  // async getAllBySearch(
+  //   brandId: number,
+  //   typeId: number,
+  //   price: number,
+  // ): Promise<IListEyewearRes[]> {
+  //   const brand = await this.brandRepository.findOneBy({ id: brandId });
+  //   const type = await this.typeRepository.findOneBy({ id: typeId });
+  //   let list = await this.eyewearRepository.find({
+  //     where: {
+  //       brand: brand || false,
+  //       type: type || false,
+  //     },
+  //     relations: {
+  //       brand: true,
+  //       type: true,
+  //       colorCollection: true,
+  //       imageCollection: true,
+  //     },
+  //   });
+  //   if (+price) {
+  //     list = list.sort(function (a, b) {
+  //       if (+price === 1) return a.price - b.price;
+  //       return b.price - a.price;
+  //     });
+  //   }
+  //   return list;
+  // }
 
   async getOneByCode(code: string): Promise<Eyewear> {
     return this.eyewearRepository.findOne({

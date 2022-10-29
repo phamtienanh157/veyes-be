@@ -4,12 +4,14 @@ import { Customer } from 'src/auth/entity/customer.entity';
 import { User } from 'src/auth/entity/user.entity';
 import { Eyewear } from 'src/eyewear/entity/eyewear.entity';
 import { Repository } from 'typeorm';
+import { ChangeStatusDto } from './dto/change-status.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Cart } from './entity/cart.entity';
 import { CartEyewear } from './entity/cartEyewear.entity';
 import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
 import { Shipment } from './entity/shipment.entity';
+import { IGetOrderRes } from './order.types';
 
 @Injectable()
 export class OrderService {
@@ -80,5 +82,78 @@ export class OrderService {
 
   async getShipment() {
     return await this.shipmentRepository.find();
+  }
+
+  async getListOrderByCustomer(id: number): Promise<IGetOrderRes[]> {
+    const customer = await this.customerRepository.findBy({ id });
+    const listOrder = await this.orderRepository.find({
+      where: { customer },
+      relations: {
+        cart: true,
+      },
+    });
+    const list = await Promise.all(
+      listOrder.map(async (order) => {
+        const listProduct = await this.cartEyewearRepository.find({
+          relations: {
+            eyewear: true,
+          },
+          where: {
+            cart: {
+              id: order.cart.id,
+            },
+          },
+        });
+        return {
+          ...order,
+          cart: listProduct,
+        };
+      }),
+    );
+
+    return list;
+  }
+
+  async getListOrder() {
+    const listOrder = await this.orderRepository.find({
+      order: { createdAt: 'DESC' },
+    });
+    return listOrder;
+  }
+
+  async getOrderDetail(id: number) {
+    const order = await this.orderRepository.findOne({
+      where: { id },
+      relations: {
+        cart: true,
+        payment: true,
+        shipment: true,
+        customer: true,
+      },
+    });
+
+    const listProduct = await this.cartEyewearRepository.find({
+      relations: {
+        eyewear: true,
+      },
+      where: {
+        cart: {
+          id: order.cart.id,
+        },
+      },
+    });
+    return {
+      ...order,
+      cart: listProduct,
+    };
+  }
+
+  async changeStatus(body: ChangeStatusDto) {
+    const order = await this.orderRepository.findOneBy({ id: body.orderId });
+    order.status = body.status;
+    await this.orderRepository.save(order);
+    return {
+      message: 'Success',
+    };
   }
 }

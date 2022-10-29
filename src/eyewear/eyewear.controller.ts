@@ -19,8 +19,13 @@ export class EyewearController {
 
   @Get()
   @HttpCode(200)
-  async getListEyewear() {
-    return this.eyewearService.getAll();
+  async getListEyewear(
+    @Query('keyword') keyword: string,
+    @Query('brand') brand: number,
+    @Query('type') type: number,
+    @Query('price') price: number,
+  ) {
+    return this.eyewearService.getAll(keyword, brand, type, price);
   }
 
   @Get('item')

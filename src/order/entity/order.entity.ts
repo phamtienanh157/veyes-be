@@ -39,5 +39,5 @@ export class Order {
   payment: Payment;
 
   @ManyToOne(() => Shipment, (shipment: Shipment) => shipment.order)
-  shipment: Payment;
+  shipment: Shipment;
 }
