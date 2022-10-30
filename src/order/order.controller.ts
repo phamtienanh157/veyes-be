@@ -3,7 +3,6 @@ import { Controller, Post, Body, HttpCode, Get, Query } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
-import { Shipment } from './entity/shipment.entity';
 import { OrderService } from './order.service';
 import { ChangeStatusDto } from './dto/change-status.dto';
 
@@ -21,12 +20,6 @@ export class OrderController {
   @HttpCode(200)
   getPayment(): Promise<Payment[]> {
     return this.orderService.getPayment();
-  }
-
-  @Get('shipment')
-  @HttpCode(200)
-  getShipment(): Promise<Shipment[]> {
-    return this.orderService.getShipment();
   }
 
   @Get()

@@ -8,8 +8,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { CreateEyewearDto } from './dto/create-eyewear.dto';
-import { DeleteEyewearDto } from './dto/delete-eyewear.dto';
-import { Eyewear } from './entity/eyewear.entity';
 import { EyewearService } from './eyewear.service';
 import { IEyewearRes, ISaveEyewearRes } from './eyewear.types';
 
@@ -31,18 +29,6 @@ export class EyewearController {
   @Get('item')
   getEyewearByCode(@Query('code') code: string) {
     return this.eyewearService.getOneByCode(code);
-  }
-
-  @Get('brands')
-  @HttpCode(200)
-  async getListBrand() {
-    return this.eyewearService.getListBrand();
-  }
-
-  @Get('types')
-  @HttpCode(200)
-  async getListType() {
-    return this.eyewearService.getListType();
   }
 
   @Post()

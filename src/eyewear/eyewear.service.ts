@@ -2,20 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateEyewearDto } from './dto/create-eyewear.dto';
-import { DeleteEyewearDto } from './dto/delete-eyewear.dto';
 import { Brand } from './entity/brand.entity';
 import ColorCollection from './entity/colorCollection.entity';
 import { Eyewear } from './entity/eyewear.entity';
 import ImageCollection from './entity/imageCollection.entity';
 import Type from './entity/type.entity';
-import {
-  IEyewearRes,
-  IListBrandRes,
-  IListEyewearRes,
-  IListTypeRes,
-  ISaveEyewearRes,
-} from './eyewear.types';
-import { isEqual } from 'lodash';
+import { IEyewearRes, IListEyewearRes, ISaveEyewearRes } from './eyewear.types';
 
 @Injectable()
 export class EyewearService {
@@ -53,7 +45,13 @@ export class EyewearService {
       },
     });
     if (keyword) {
-      list = list.filter((item) => item.name.toLowerCase().includes(keyword));
+      list = list.filter(
+        (item) =>
+          item.name.toLowerCase().includes(keyword) ||
+          item.code.toLowerCase().includes(keyword) ||
+          item.type.name.toLowerCase().includes(keyword) ||
+          item.brand.name.toLowerCase().includes(keyword),
+      );
     }
     if (+price) {
       list = list.sort(function (a, b) {
@@ -63,34 +61,6 @@ export class EyewearService {
     }
     return list;
   }
-
-  // async getAllBySearch(
-  //   brandId: number,
-  //   typeId: number,
-  //   price: number,
-  // ): Promise<IListEyewearRes[]> {
-  //   const brand = await this.brandRepository.findOneBy({ id: brandId });
-  //   const type = await this.typeRepository.findOneBy({ id: typeId });
-  //   let list = await this.eyewearRepository.find({
-  //     where: {
-  //       brand: brand || false,
-  //       type: type || false,
-  //     },
-  //     relations: {
-  //       brand: true,
-  //       type: true,
-  //       colorCollection: true,
-  //       imageCollection: true,
-  //     },
-  //   });
-  //   if (+price) {
-  //     list = list.sort(function (a, b) {
-  //       if (+price === 1) return a.price - b.price;
-  //       return b.price - a.price;
-  //     });
-  //   }
-  //   return list;
-  // }
 
   async getOneByCode(code: string): Promise<Eyewear> {
     return this.eyewearRepository.findOne({
@@ -102,16 +72,6 @@ export class EyewearService {
         imageCollection: true,
       },
     });
-  }
-
-  async getListBrand(): Promise<IListBrandRes[]> {
-    const list = await this.brandRepository.find();
-    return list;
-  }
-
-  async getListType(): Promise<IListTypeRes[]> {
-    const list = await this.typeRepository.find();
-    return list;
   }
 
   async saveEyewear(body: CreateEyewearDto): Promise<ISaveEyewearRes> {

@@ -80,10 +80,6 @@ export class OrderService {
     return await this.paymentRepository.find();
   }
 
-  async getShipment() {
-    return await this.shipmentRepository.find();
-  }
-
   async getListOrderByCustomer(id: number): Promise<IGetOrderRes[]> {
     const customer = await this.customerRepository.findBy({ id });
     const listOrder = await this.orderRepository.find({
