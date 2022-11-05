@@ -4,11 +4,18 @@ import {
   Controller,
   HttpCode,
   Post,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
+import { ERole } from 'src/common/constants';
 import { IAccessToken, ISignUpRes } from './auth.interface';
 import { AuthService } from './auth.service';
+import { Roles } from './decorator/roles.decorator';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { JWTGuard } from './guards/jwt.guard';
+import { LocalAuthGuard } from './guards/local.guard';
+import { RoleGuard } from './guards/roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -30,14 +37,16 @@ export class AuthController {
   }
 
   @Post('/signin')
+  @UseGuards(LocalAuthGuard)
   @HttpCode(200)
-  async signIn(
-    @Body() authCredentialsDto: AuthCredentialsDto,
-  ): Promise<IAccessToken> {
-    return this.authService.signIn(authCredentialsDto);
+  async signIn(@Request() request): Promise<IAccessToken> {
+    return this.authService.signIn(request.user);
   }
 
   @Post('/change-password')
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
+  @Roles(ERole.USER)
   @HttpCode(200)
   async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
     return this.authService.changePassword(changePasswordDto);

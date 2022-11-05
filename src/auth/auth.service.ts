@@ -24,11 +24,33 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  async hashPassword(password: string): Promise<string> {
+    const salt = await bcrypt.genSalt();
+    return await bcrypt.hash(password, salt);
+  }
+
+  async comparePassword(
+    password: string,
+    storePasswordHash: string,
+  ): Promise<boolean> {
+    return await bcrypt.compare(password, storePasswordHash);
+  }
+
+  async authentication(username: string, password: string): Promise<any> {
+    const user = await this.usersRepository.findOneBy({ username });
+    const check = await this.comparePassword(password, user.password);
+
+    if (!user || !check) {
+      return false;
+    }
+
+    return user;
+  }
+
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
     try {
       const { username, password } = authCredentialsDto;
-      const salt = await bcrypt.genSalt();
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword = await this.hashPassword(password);
       const user = await this.usersRepository.save({
         username,
         password: hashedPassword,
@@ -39,26 +61,17 @@ export class AuthService {
       });
     } catch (error) {
       if (error.code === EErrorCode.ConflictException) {
-        throw new ConflictException('Username already exists');
+        throw new ConflictException('Tài khoản đã tồn tại!');
       }
       throw new InternalServerErrorException();
     }
   }
 
-  async signIn(authCredentialsDto: AuthCredentialsDto): Promise<ISignInRes> {
-    try {
-      const { username, password } = authCredentialsDto;
-      const user = await this.usersRepository.findOneBy({ username });
-      if (user && (await bcrypt.compare(password, user.password))) {
-        const payload: IJWTPayload = { username, role: user.role };
-        const accessToken: string = this.jwtService.sign(payload);
-        return { accessToken, userId: user.id };
-      } else {
-        throw new UnauthorizedException('Please check your login credentials!');
-      }
-    } catch (error) {
-      throw new UnauthorizedException('Please check your login credentials!');
-    }
+  async signIn(userEntity: User): Promise<ISignInRes> {
+    const { username, id, role } = userEntity;
+    const payload: IJWTPayload = { username, role: role, userId: id };
+    const accessToken: string = this.jwtService.sign(payload);
+    return { accessToken };
   }
 
   async changePassword(changePasswordDto: ChangePasswordDto) {

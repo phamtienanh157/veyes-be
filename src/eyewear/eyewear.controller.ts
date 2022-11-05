@@ -6,7 +6,12 @@ import {
   HttpCode,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
+import { Roles } from 'src/auth/decorator/roles.decorator';
+import { JWTGuard } from 'src/auth/guards/jwt.guard';
+import { RoleGuard } from 'src/auth/guards/roles.guard';
+import { ERole } from 'src/common/constants';
 import { CreateEyewearDto } from './dto/create-eyewear.dto';
 import { EyewearService } from './eyewear.service';
 import { IEyewearRes, ISaveEyewearRes } from './eyewear.types';
@@ -32,12 +37,18 @@ export class EyewearController {
   }
 
   @Post()
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
+  @Roles(ERole.ADMIN)
   @HttpCode(200)
   async saveEyewear(@Body() body: CreateEyewearDto): Promise<ISaveEyewearRes> {
     return this.eyewearService.saveEyewear(body);
   }
 
   @Delete()
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
+  @Roles(ERole.ADMIN)
   @HttpCode(200)
   async deleteOne(@Query('id') id: number): Promise<IEyewearRes> {
     return this.eyewearService.deleteOne(id);

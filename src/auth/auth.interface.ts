@@ -5,6 +5,7 @@ export interface IAccessToken {
 export interface IJWTPayload {
   username: string;
   role?: string;
+  userId: number;
 }
 
 export interface ISignUpRes {
@@ -13,5 +14,4 @@ export interface ISignUpRes {
 
 export interface ISignInRes {
   accessToken: string;
-  userId: number;
 }
