@@ -1,12 +1,10 @@
 import { Customer } from 'src/auth/entity/customer.entity';
 import { Eyewear } from 'src/eyewear/entity/eyewear.entity';
-import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 

@@ -8,6 +8,7 @@ import {
 import { IAccessToken, ISignUpRes } from './auth.interface';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -34,5 +35,11 @@ export class AuthController {
     @Body() authCredentialsDto: AuthCredentialsDto,
   ): Promise<IAccessToken> {
     return this.authService.signIn(authCredentialsDto);
+  }
+
+  @Post('/change-password')
+  @HttpCode(200)
+  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
+    return this.authService.changePassword(changePasswordDto);
   }
 }

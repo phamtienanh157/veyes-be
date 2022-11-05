@@ -13,12 +13,14 @@ import { User } from './entity/user.entity';
 import { EErrorCode, ERole } from 'src/common/constants';
 import { IJWTPayload, ISignInRes } from './auth.interface';
 import { Customer } from './entity/customer.entity';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User) private usersRepository: Repository<User>,
-    @InjectRepository(User) private customerRepository: Repository<Customer>,
+    @InjectRepository(Customer)
+    private customerRepository: Repository<Customer>,
     private jwtService: JwtService,
   ) {}
 
@@ -54,6 +56,22 @@ export class AuthService {
       } else {
         throw new UnauthorizedException('Please check your login credentials!');
       }
+    } catch (error) {
+      throw new UnauthorizedException('Please check your login credentials!');
+    }
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto) {
+    try {
+      const { oldPassword, newPassword, confirmPassword } = changePasswordDto;
+      // const user = await this.usersRepository.findOneBy({ username });
+      // if (user && (await bcrypt.compare(password, user.password))) {
+      //   const payload: IJWTPayload = { username, role: user.role };
+      //   const accessToken: string = this.jwtService.sign(payload);
+      //   return { accessToken, userId: user.id };
+      // } else {
+      //   throw new UnauthorizedException('Please check your login credentials!');
+      // }
     } catch (error) {
       throw new UnauthorizedException('Please check your login credentials!');
     }

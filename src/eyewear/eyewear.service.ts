@@ -9,6 +9,17 @@ import ImageCollection from './entity/imageCollection.entity';
 import Type from './entity/type.entity';
 import { IEyewearRes, IListEyewearRes, ISaveEyewearRes } from './eyewear.types';
 
+const removeAccents = (text: string) => {
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D');
+};
+
+const helpSearch = (text: string, keyword: string) =>
+  removeAccents(text).toLocaleLowerCase().includes(keyword);
+
 @Injectable()
 export class EyewearService {
   constructor(
@@ -47,10 +58,10 @@ export class EyewearService {
     if (keyword) {
       list = list.filter(
         (item) =>
-          item.name.toLowerCase().includes(keyword) ||
-          item.code.toLowerCase().includes(keyword) ||
-          item.type.name.toLowerCase().includes(keyword) ||
-          item.brand.name.toLowerCase().includes(keyword),
+          helpSearch(item.name, keyword) ||
+          helpSearch(item.code, keyword) ||
+          helpSearch(item.type.name, keyword) ||
+          helpSearch(item.brand.name, keyword),
       );
     }
     if (+price) {
