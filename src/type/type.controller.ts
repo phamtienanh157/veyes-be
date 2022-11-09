@@ -15,8 +15,7 @@ import { RoleGuard } from 'src/auth/guards/roles.guard';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { ERole } from 'src/common/constants';
-@UseGuards(RoleGuard)
-@UseGuards(JWTGuard)
+
 @Controller('type')
 export class TypeController {
   constructor(private readonly typeService: TypeService) {}
@@ -28,6 +27,8 @@ export class TypeController {
   }
 
   @Post()
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
   @Roles(ERole.ADMIN)
   @HttpCode(200)
   updateType(@Body() body: UpdateTypeDto): Promise<Type> {
@@ -35,6 +36,8 @@ export class TypeController {
   }
 
   @Delete()
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
   @Roles(ERole.ADMIN)
   @HttpCode(200)
   deleteType(@Query('id') id: number) {

@@ -58,7 +58,7 @@ export class OrderController {
   }
 
   @Post('status')
-  @Roles(ERole.ADMIN)
+  // @Roles(ERole.ADMIN)
   @HttpCode(200)
   changeStatus(@Body() body: ChangeStatusDto) {
     return this.orderService.changeStatus(body);

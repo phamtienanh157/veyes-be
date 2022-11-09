@@ -14,4 +14,5 @@ export interface ISignUpRes {
 
 export interface ISignInRes {
   accessToken: string;
+  role: string;
 }

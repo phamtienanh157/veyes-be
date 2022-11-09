@@ -16,8 +16,6 @@ import { Shipment } from 'src/order/entity/shipment.entity';
 import { UpdateShipmentDto } from './dto/update-shipment.dto';
 import { ShipmentService } from './shipment.service';
 
-@UseGuards(RoleGuard)
-@UseGuards(JWTGuard)
 @Controller('shipment')
 export class ShipmentController {
   constructor(private readonly shipmentService: ShipmentService) {}
@@ -30,6 +28,8 @@ export class ShipmentController {
 
   @Post()
   @Roles(ERole.ADMIN)
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
   @HttpCode(200)
   updateShipment(@Body() body: UpdateShipmentDto): Promise<Shipment> {
     return this.shipmentService.updateShipment(body);
@@ -37,6 +37,8 @@ export class ShipmentController {
 
   @Delete()
   @Roles(ERole.ADMIN)
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
   @HttpCode(200)
   deleteShipment(@Query('id') id: number) {
     return this.shipmentService.deleteShipment(id);

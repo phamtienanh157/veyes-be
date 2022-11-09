@@ -15,8 +15,7 @@ import { Brand } from 'src/eyewear/entity/brand.entity';
 import { BrandService } from './brand.service';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { JWTGuard } from '../auth/guards/jwt.guard';
-@UseGuards(RoleGuard)
-@UseGuards(JWTGuard)
+
 @Controller('brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
@@ -28,6 +27,8 @@ export class BrandController {
   }
 
   @Post()
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
   @Roles(ERole.ADMIN)
   @HttpCode(200)
   updateBrand(@Body() body: UpdateBrandDto): Promise<Brand> {
@@ -35,6 +36,8 @@ export class BrandController {
   }
 
   @Delete()
+  @UseGuards(RoleGuard)
+  @UseGuards(JWTGuard)
   @Roles(ERole.ADMIN)
   @HttpCode(200)
   deleteBrand(@Query('id') id: number) {

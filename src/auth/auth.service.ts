@@ -72,7 +72,7 @@ export class AuthService {
     const { username, id, role } = userEntity;
     const payload: IJWTPayload = { username, role: role, userId: id };
     const accessToken: string = this.jwtService.sign(payload);
-    return { accessToken };
+    return { accessToken, role };
   }
 
   async changePassword(id, changePasswordDto: ChangePasswordDto) {
