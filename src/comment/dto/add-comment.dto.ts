@@ -2,9 +2,10 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class AddCommentDto {
   @IsNumber()
-  id: number;
+  @IsNotEmpty()
+  eyewearId: number;
 
   @IsNotEmpty()
   @IsString()
-  name: string;
+  comment: string;
 }

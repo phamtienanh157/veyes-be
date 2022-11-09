@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -74,19 +75,25 @@ export class AuthService {
     return { accessToken };
   }
 
-  async changePassword(changePasswordDto: ChangePasswordDto) {
+  async changePassword(id, changePasswordDto: ChangePasswordDto) {
     try {
-      const { oldPassword, newPassword, confirmPassword } = changePasswordDto;
-      // const user = await this.usersRepository.findOneBy({ username });
-      // if (user && (await bcrypt.compare(password, user.password))) {
-      //   const payload: IJWTPayload = { username, role: user.role };
-      //   const accessToken: string = this.jwtService.sign(payload);
-      //   return { accessToken, userId: user.id };
-      // } else {
-      //   throw new UnauthorizedException('Please check your login credentials!');
-      // }
+      const { oldPassword, newPassword } = changePasswordDto;
+      const user = await this.usersRepository.findOneBy({ id });
+
+      const check = await bcrypt.compare(oldPassword, user.password);
+
+      if (check && oldPassword !== newPassword) {
+        const hashedPassword = await this.hashPassword(newPassword);
+        user.password = hashedPassword;
+        await this.usersRepository.save(user);
+        return {
+          message: 'Successfully',
+        };
+      } else {
+        throw new BadRequestException('Xảy ra lỗi');
+      }
     } catch (error) {
-      throw new UnauthorizedException('Please check your login credentials!');
+      throw new BadRequestException('Xảy ra lỗi');
     }
   }
 }

@@ -1,5 +1,17 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+  Request,
+  Delete,
+} from '@nestjs/common';
+import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { CommentService } from './comment.service';
+import { AddCommentDto } from './dto/add-comment.dto';
 import { Comment } from './entity/comment.entity';
 
 @Controller('comment')
@@ -8,13 +20,21 @@ export class CommentController {
 
   @Get(':id')
   @HttpCode(200)
-  getAllComment(): Promise<Comment[]> {
-    return this.commentService.getAllComment();
+  getAllComment(@Param('id') id: number): Promise<Comment[]> {
+    return this.commentService.getAllComment(id);
   }
 
-  //   @Post()
-  //   @HttpCode(200)
-  //   addComment(@Body() body: UpdateBrandDto) {
-  //     return this.commentService.updateBrand(body);
-  //   }
+  @Post()
+  @UseGuards(JWTGuard)
+  @HttpCode(200)
+  addComment(@Request() request, @Body() body: AddCommentDto) {
+    return this.commentService.addComment(request.user.id, body);
+  }
+
+  @Delete(':id')
+  @UseGuards(JWTGuard)
+  @HttpCode(200)
+  deleteComment(@Param('id') id: number) {
+    return this.commentService.deleteComment(id);
+  }
 }

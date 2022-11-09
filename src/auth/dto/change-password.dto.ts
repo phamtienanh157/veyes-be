@@ -8,9 +8,4 @@ export class ChangePasswordDto {
   @MinLength(6)
   @MaxLength(32)
   newPassword: string;
-
-  @IsString()
-  @MinLength(6)
-  @MaxLength(32)
-  confirmPassword: string;
 }

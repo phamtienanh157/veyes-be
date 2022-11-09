@@ -48,7 +48,10 @@ export class AuthController {
   @UseGuards(JWTGuard)
   @Roles(ERole.USER)
   @HttpCode(200)
-  async changePassword(@Body() changePasswordDto: ChangePasswordDto) {
-    return this.authService.changePassword(changePasswordDto);
+  async changePassword(
+    @Request() request,
+    @Body() changePasswordDto: ChangePasswordDto,
+  ) {
+    return this.authService.changePassword(request.user.id, changePasswordDto);
   }
 }
