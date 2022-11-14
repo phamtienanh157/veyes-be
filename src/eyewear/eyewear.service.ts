@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Comment } from 'src/comment/entity/comment.entity';
+import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
 import { Repository } from 'typeorm';
 import { CreateEyewearDto } from './dto/create-eyewear.dto';
 import { Brand } from './entity/brand.entity';
@@ -33,6 +35,10 @@ export class EyewearService {
     private readonly colorCollectionRepository: Repository<ColorCollection>,
     @InjectRepository(ImageCollection)
     private readonly imageCollectionRepository: Repository<ImageCollection>,
+    @InjectRepository(CartEyewear)
+    private readonly cartEyewearRepository: Repository<CartEyewear>,
+    @InjectRepository(Comment)
+    private readonly commentRepository: Repository<Comment>,
   ) {}
 
   async getAll(
@@ -139,6 +145,8 @@ export class EyewearService {
     const eyewear = await this.eyewearRepository.findOneBy({ id });
     await this.colorCollectionRepository.delete({ eyewear });
     await this.imageCollectionRepository.delete({ eyewear });
+    await this.cartEyewearRepository.delete({ eyewear });
+    await this.commentRepository.delete({ eyewear });
     await this.eyewearRepository.delete(id);
     return {
       message: 'Success',

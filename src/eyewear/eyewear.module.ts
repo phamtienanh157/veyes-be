@@ -7,6 +7,8 @@ import { Brand } from './entity/brand.entity';
 import Type from './entity/type.entity';
 import ColorCollection from './entity/colorCollection.entity';
 import ImageCollection from './entity/imageCollection.entity';
+import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
+import { Comment } from 'src/comment/entity/comment.entity';
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import ImageCollection from './entity/imageCollection.entity';
       Type,
       ColorCollection,
       ImageCollection,
+      CartEyewear,
+      Comment,
     ]),
   ],
   providers: [EyewearService],
