@@ -22,6 +22,9 @@ import { configValidationSchema } from 'src/config/config.schema';
         synchronize: true,
         autoLoadEntities: true,
         entities: [__dirname + '/../**/*.entity.{js,ts}'],
+        ssl: {
+          rejectUnauthorized: false,
+        },
       }),
     }),
   ],
