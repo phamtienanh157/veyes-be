@@ -19,8 +19,10 @@ const removeAccents = (text: string) => {
     .replace(/Đ/g, 'D');
 };
 
-const helpSearch = (text: string, keyword: string) =>
-  removeAccents(text).toLocaleLowerCase().includes(keyword);
+const helpSearch = (text: string, keyword: string) => {
+  const temp = removeAccents(keyword).toLocaleLowerCase();
+  return removeAccents(text).toLocaleLowerCase().includes(temp);
+};
 
 @Injectable()
 export class EyewearService {

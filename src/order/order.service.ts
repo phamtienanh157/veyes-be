@@ -34,8 +34,8 @@ export class OrderService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async createOrder(body: CreateOrderDto) {
-    const { totalPrice, paymentId, shipmentId, cart, customer, userId } = body;
+  async createOrder(body: CreateOrderDto, userId: number) {
+    const { totalPrice, paymentId, shipmentId, cart, customer } = body;
 
     const user = await this.userRepository.findOneBy({ id: userId });
     const thisCustomer = await this.customerRepository.findOneBy({ user });
@@ -80,8 +80,8 @@ export class OrderService {
     return await this.paymentRepository.find();
   }
 
-  async getListOrderByCustomer(id: number): Promise<IGetOrderRes[]> {
-    const customer = await this.customerRepository.findBy({ id });
+  async getListByCustomer(id: number): Promise<IGetOrderRes[]> {
+    const customer = await this.customerRepository.findBy({ user: { id } });
     const listOrder = await this.orderRepository.find({
       where: { customer },
       relations: {

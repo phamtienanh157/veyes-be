@@ -11,10 +11,6 @@ import { Customer } from 'src/auth/entity/customer.entity';
 export class CreateOrderDto {
   @IsNotEmpty()
   @IsNumber()
-  userId: number;
-
-  @IsNotEmpty()
-  @IsNumber()
   totalPrice: number;
 
   @IsNotEmpty()

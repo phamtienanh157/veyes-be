@@ -18,19 +18,19 @@ import { SaveUserInfoDto } from './dto/save-user-info.dto';
 @UseGuards(JWTGuard)
 @Controller('account')
 export class AccountController {
-  constructor(private readonly userService: AccountService) {}
+  constructor(private readonly accountService: AccountService) {}
 
   @Get()
   // @Roles(ERole.USER)
   @HttpCode(200)
   async getUser(@Request() request) {
-    return this.userService.getByUserId(request.user.id);
+    return this.accountService.getByUserId(request.user.id);
   }
 
   @Post()
   @Roles(ERole.USER)
   @HttpCode(200)
   async saveUserInfo(@Body() body: SaveUserInfoDto) {
-    return this.userService.saveUserInfo(body);
+    return this.accountService.saveUserInfo(body);
   }
 }

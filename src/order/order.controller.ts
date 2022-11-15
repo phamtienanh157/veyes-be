@@ -28,8 +28,11 @@ export class OrderController {
   @Post()
   @Roles(ERole.USER)
   @HttpCode(200)
-  createOrder(@Body() body: CreateOrderDto): Promise<Order> {
-    return this.orderService.createOrder(body);
+  createOrder(
+    @Body() body: CreateOrderDto,
+    @Request() request,
+  ): Promise<Order> {
+    return this.orderService.createOrder(body, request.user.id);
   }
 
   @Get('payment')
@@ -41,7 +44,7 @@ export class OrderController {
   @Get()
   @HttpCode(200)
   getListOrder(@Request() request): Promise<IGetOrderRes[]> {
-    return this.orderService.getListOrderByCustomer(request.user.id);
+    return this.orderService.getListByCustomer(request.user.id);
   }
 
   @Get('getAll')
