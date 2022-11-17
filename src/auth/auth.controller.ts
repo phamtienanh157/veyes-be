@@ -26,14 +26,7 @@ export class AuthController {
   async signUp(
     @Body() authCredentialsDto: AuthCredentialsDto,
   ): Promise<ISignUpRes> {
-    try {
-      await this.authService.signUp(authCredentialsDto);
-      return {
-        message: 'Sign up successfully!',
-      };
-    } catch (error) {
-      throw new BadRequestException('Fail!');
-    }
+    return this.authService.signUp(authCredentialsDto);
   }
 
   @Post('/signin')

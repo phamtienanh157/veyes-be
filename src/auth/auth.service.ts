@@ -12,7 +12,7 @@ import { Repository } from 'typeorm';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { User } from './entity/user.entity';
 import { EErrorCode, ERole } from 'src/common/constants';
-import { IJWTPayload, ISignInRes } from './auth.interface';
+import { IJWTPayload, ISignInRes, ISignUpRes } from './auth.interface';
 import { Customer } from './entity/customer.entity';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
@@ -39,18 +39,30 @@ export class AuthService {
 
   async authentication(username: string, password: string): Promise<any> {
     const user = await this.usersRepository.findOneBy({ username });
+
+    if (!user) {
+      throw new UnauthorizedException('Tài khoản không tồn tại');
+    }
+
     const check = await this.comparePassword(password, user.password);
 
-    if (!user || !check) {
+    if (!check) {
       return false;
     }
 
     return user;
   }
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<void> {
+  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<ISignUpRes> {
+    const { username, password } = authCredentialsDto;
+
     try {
-      const { username, password } = authCredentialsDto;
+      const userExist = await this.usersRepository.findOneBy({ username });
+
+      if (userExist) {
+        throw new BadRequestException('Tài khoản đã tồn tại!');
+      }
+
       const hashedPassword = await this.hashPassword(password);
       const user = await this.usersRepository.save({
         username,
@@ -60,11 +72,11 @@ export class AuthService {
       await this.customerRepository.save({
         user,
       });
+      return {
+        message: 'Success',
+      };
     } catch (error) {
-      if (error.code === EErrorCode.ConflictException) {
-        throw new ConflictException('Tài khoản đã tồn tại!');
-      }
-      throw new InternalServerErrorException();
+      throw new BadRequestException();
     }
   }
 
@@ -90,10 +102,10 @@ export class AuthService {
           message: 'Successfully',
         };
       } else {
-        throw new BadRequestException('Xảy ra lỗi');
+        throw new BadRequestException();
       }
     } catch (error) {
-      throw new BadRequestException('Xảy ra lỗi');
+      throw new BadRequestException();
     }
   }
 }
