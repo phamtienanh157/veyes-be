@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Cart } from './cart.entity';
 import { Payment } from './payment.entity';
-import { Shipment } from './shipment.entity';
+import { Shipment } from '../../shipment/entity/shipment.entity';
 
 @Entity()
 export class Order {

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ShipmentService } from './shipment.service';
 import { ShipmentController } from './shipment.controller';
-import { Shipment } from 'src/order/entity/shipment.entity';
+import { Shipment } from 'src/shipment/entity/shipment.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({

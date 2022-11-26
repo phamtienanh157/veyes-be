@@ -7,7 +7,7 @@ import { Cart } from './entity/cart.entity';
 import { CartEyewear } from './entity/cartEyewear.entity';
 import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
-import { Shipment } from './entity/shipment.entity';
+import { Shipment } from '../shipment/entity/shipment.entity';
 import { OrderController } from './order.controller';
 import { OrderService } from './order.service';
 

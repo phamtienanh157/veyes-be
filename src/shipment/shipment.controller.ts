@@ -12,7 +12,7 @@ import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/guards/roles.guard';
 import { ERole } from 'src/common/constants';
-import { Shipment } from 'src/order/entity/shipment.entity';
+import { Shipment } from 'src/shipment/entity/shipment.entity';
 import { UpdateShipmentDto } from './dto/update-shipment.dto';
 import { ShipmentService } from './shipment.service';
 

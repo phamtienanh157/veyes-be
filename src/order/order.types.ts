@@ -1,4 +1,4 @@
-import { Shipment } from './entity/shipment.entity';
+import { Shipment } from '../shipment/entity/shipment.entity';
 import { CartEyewear } from './entity/cartEyewear.entity';
 import { Payment } from './entity/payment.entity';
 import { Customer } from 'src/auth/entity/customer.entity';

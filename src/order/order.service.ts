@@ -10,7 +10,7 @@ import { Cart } from './entity/cart.entity';
 import { CartEyewear } from './entity/cartEyewear.entity';
 import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
-import { Shipment } from './entity/shipment.entity';
+import { Shipment } from '../shipment/entity/shipment.entity';
 import { IGetOrderRes } from './order.types';
 
 @Injectable()
