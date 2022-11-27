@@ -42,3 +42,5 @@ export enum ESuggestion {
   glassForm = 'glassForm',
   material = 'material',
 }
+
+export const LimitCount = 8;

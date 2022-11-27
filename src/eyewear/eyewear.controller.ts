@@ -27,8 +27,10 @@ export class EyewearController {
     @Query('brand') brand: number,
     @Query('type') type: number,
     @Query('price') price: number,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
   ) {
-    return this.eyewearService.getAll(keyword, brand, type, price);
+    return this.eyewearService.getAll(keyword, brand, type, price, page, limit);
   }
 
   @Get('item')

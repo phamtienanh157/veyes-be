@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from 'src/comment/entity/comment.entity';
+import { LimitCount } from 'src/common/constants';
 import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
 import { Repository } from 'typeorm';
 import { CreateEyewearDto } from './dto/create-eyewear.dto';
@@ -9,7 +10,7 @@ import ColorCollection from './entity/colorCollection.entity';
 import { Eyewear } from './entity/eyewear.entity';
 import ImageCollection from './entity/imageCollection.entity';
 import Type from './entity/type.entity';
-import { IEyewearRes, IListEyewearRes, ISaveEyewearRes } from './eyewear.types';
+import { IEyewearRes, ISaveEyewearRes } from './eyewear.types';
 
 const removeAccents = (text: string) => {
   return text
@@ -48,7 +49,9 @@ export class EyewearService {
     brandId: number,
     typeId: number,
     price: number,
-  ): Promise<IListEyewearRes[]> {
+    pageParam: number,
+    limitParam: number,
+  ) {
     const brand = await this.brandRepository.findOneBy({ id: brandId });
     const type = await this.typeRepository.findOneBy({ id: typeId });
     let list = await this.eyewearRepository.find({
@@ -78,7 +81,20 @@ export class EyewearService {
         return b.price - a.price;
       });
     }
-    return list;
+    const page = +pageParam || 1;
+    const limit = +limitParam || LimitCount;
+    const pageCount = list.length / limit;
+
+    let res = [];
+
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    res = list.slice(start, end);
+
+    return {
+      listProducts: res,
+      pageCount,
+    };
   }
 
   async getOneByCode(code: string): Promise<Eyewear> {

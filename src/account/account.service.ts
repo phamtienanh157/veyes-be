@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from 'src/auth/entity/customer.entity';
 import { User } from 'src/auth/entity/user.entity';
+import { ERole } from 'src/common/constants';
 import { Repository } from 'typeorm';
 import { IGetUser } from './account.interface';
 import { ISaveUserInfoRes } from './account.types';
@@ -37,5 +38,22 @@ export class AccountService {
     return {
       message: 'Success',
     };
+  }
+
+  async getAll() {
+    const list = await this.userRepository.find({
+      where: { role: ERole.USER },
+      relations: {
+        customer: true,
+      },
+    });
+    const res = list.map((item) => ({
+      createdAt: item.createdAt,
+      name: item.customer.name,
+      email: item.email,
+      address: item.customer.address,
+      phoneNumber: item.customer.phoneNumber,
+    }));
+    return res;
   }
 }

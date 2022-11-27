@@ -33,4 +33,11 @@ export class AccountController {
   async saveUserInfo(@Body() body: SaveUserInfoDto) {
     return this.accountService.saveUserInfo(body);
   }
+
+  @Get('all')
+  @Roles(ERole.ADMIN)
+  @HttpCode(200)
+  async getAll() {
+    return this.accountService.getAll();
+  }
 }

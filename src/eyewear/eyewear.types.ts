@@ -1,12 +1,17 @@
-export interface IListEyewearRes {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  maxQuantity: number;
-  code: string;
-  thumbnail: string;
-}
+// export interface IListEyewearRes {
+//   listProducts: IEyewearRes[];
+//   pageCount: number;
+// }
+
+// export interface IEyewearRes {
+//   id: number;
+//   name: string;
+//   description: string;
+//   price: number;
+//   maxQuantity: number;
+//   code: string;
+//   thumbnail: string;
+// }
 
 export interface IColor {
   id: number;
