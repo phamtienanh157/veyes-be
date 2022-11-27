@@ -13,6 +13,7 @@ import { AuthService } from './auth.service';
 import { Roles } from './decorator/roles.decorator';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JWTGuard } from './guards/jwt.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 import { RoleGuard } from './guards/roles.guard';
@@ -46,5 +47,11 @@ export class AuthController {
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
     return this.authService.changePassword(request.user.id, changePasswordDto);
+  }
+
+  @Post('/reset-password')
+  @HttpCode(200)
+  async resetPassword(@Body() resetPasswordDto: ResetPasswordDto) {
+    return this.authService.resetPassword(resetPasswordDto);
   }
 }

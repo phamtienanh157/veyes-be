@@ -10,10 +10,11 @@ import { BrandModule } from './brand/brand.module';
 import { TypeModule } from './type/type.module';
 import { ShipmentModule } from './shipment/shipment.module';
 import { SuggestionModule } from './suggestion/suggestion.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     DatabaseModule,
     AuthModule,
     EyewearModule,
@@ -24,6 +25,7 @@ import { SuggestionModule } from './suggestion/suggestion.module';
     TypeModule,
     ShipmentModule,
     SuggestionModule,
+    MailModule,
   ],
 })
 export class AppModule {}

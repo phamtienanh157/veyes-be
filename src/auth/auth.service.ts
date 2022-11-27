@@ -7,10 +7,12 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { ERole } from 'src/common/constants';
+import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import { IJWTPayload, ISignInRes, ISignUpRes } from './auth.interface';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Customer } from './entity/customer.entity';
 import { User } from './entity/user.entity';
 
@@ -21,6 +23,7 @@ export class AuthService {
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
     private jwtService: JwtService,
+    private mailService: MailService,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -104,6 +107,30 @@ export class AuthService {
       } else {
         throw new BadRequestException();
       }
+    } catch (error) {
+      throw new BadRequestException();
+    }
+  }
+
+  async resetPassword(resetPasswordDto: ResetPasswordDto) {
+    const { email } = resetPasswordDto;
+    try {
+      const user = await this.usersRepository.findOneBy({ email });
+      if (!user) {
+        throw new BadRequestException('Email không tồn tại!');
+      }
+
+      const randomPass = Math.random().toString(36).slice(-8);
+      await this.mailService.resetPassword(email, randomPass);
+
+      const hashedPassword = await this.hashPassword(randomPass);
+
+      user.password = hashedPassword;
+      await this.usersRepository.save(user);
+
+      return {
+        message: 'Success',
+      };
     } catch (error) {
       throw new BadRequestException();
     }
