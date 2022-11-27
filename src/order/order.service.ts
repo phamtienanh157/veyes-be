@@ -41,7 +41,6 @@ export class OrderService {
     const thisCustomer = await this.customerRepository.findOneBy({ user });
     thisCustomer.address = customer.address;
     thisCustomer.name = customer.name;
-    thisCustomer.email = customer.email;
     thisCustomer.phoneNumber = customer.phoneNumber;
     await this.customerRepository.save(thisCustomer);
 

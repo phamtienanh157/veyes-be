@@ -11,10 +11,6 @@ export class SaveUserInfoDto {
 
   @IsNotEmpty()
   @IsString()
-  email: string;
-
-  @IsNotEmpty()
-  @IsString()
   name: string;
 
   @IsNotEmpty()

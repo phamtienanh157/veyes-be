@@ -22,9 +22,6 @@ export class Customer {
   phoneNumber: string;
 
   @Column({ nullable: true })
-  email: string;
-
-  @Column({ nullable: true })
   address: string;
 
   @OneToOne(() => User)

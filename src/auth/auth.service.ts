@@ -1,20 +1,18 @@
 import {
   BadRequestException,
-  ConflictException,
   Injectable,
-  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
+import { ERole } from 'src/common/constants';
 import { Repository } from 'typeorm';
-import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { User } from './entity/user.entity';
-import { EErrorCode, ERole } from 'src/common/constants';
 import { IJWTPayload, ISignInRes, ISignUpRes } from './auth.interface';
-import { Customer } from './entity/customer.entity';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { Customer } from './entity/customer.entity';
+import { User } from './entity/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -54,12 +52,13 @@ export class AuthService {
   }
 
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<ISignUpRes> {
-    const { username, password } = authCredentialsDto;
+    const { username, password, email } = authCredentialsDto;
 
     try {
       const userExist = await this.usersRepository.findOneBy({ username });
+      const emailExist = await this.usersRepository.findOneBy({ email });
 
-      if (userExist) {
+      if (userExist || emailExist) {
         throw new BadRequestException('Tài khoản đã tồn tại!');
       }
 
@@ -67,6 +66,7 @@ export class AuthService {
       const user = await this.usersRepository.save({
         username,
         password: hashedPassword,
+        email,
         role: ERole.USER,
       });
       await this.customerRepository.save({

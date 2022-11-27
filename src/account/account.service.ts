@@ -23,14 +23,14 @@ export class AccountService {
       ...customer,
       role: user.role,
       username: user.username,
+      email: user.email,
     };
   }
 
   async saveUserInfo(body: SaveUserInfoDto): Promise<ISaveUserInfoRes> {
-    const { id, name, phoneNumber, email, address } = body;
+    const { id, name, phoneNumber, address } = body;
     const customer = await this.customerRepository.findOneBy({ id });
     customer.address = address;
-    customer.email = email;
     customer.name = name;
     customer.phoneNumber = phoneNumber;
     this.customerRepository.save(customer);

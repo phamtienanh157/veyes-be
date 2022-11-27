@@ -1,5 +1,11 @@
 import { ERole } from 'src/common/constants';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Customer } from './customer.entity';
 
 @Entity()
@@ -13,6 +19,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column()
+  email: string;
+
   @Column({
     type: 'enum',
     enum: ERole,
@@ -22,4 +31,7 @@ export class User {
 
   @OneToOne(() => Customer, (customer) => customer.user)
   customer: Customer;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
 }
