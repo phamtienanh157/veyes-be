@@ -47,7 +47,7 @@ export class SuggestionService {
 
   async postSuggestionForm(body: SuggestionDto) {
     const listSuggestion = await this.suggestionRepository.find();
-    let result = [];
+    const result = [];
 
     listSuggestion.forEach((item) => {
       let similarity =
@@ -86,16 +86,18 @@ export class SuggestionService {
   }
 
   async getProductsById(ids: string[]) {
-    const newIds = ids.map((item) => this.convertStringToNumberArray(item));
-    console.log(
-      '🚀 ~ file: suggestion.service.ts ~ line 94 ~ SuggestionService ~ getProductsById ~ newIds',
-      newIds,
-    );
-    const result = [];
-    // newIds.map(async (list) => {
-    const list = [18, 1, 2];
-    const test = await Promise.all(
-      list.map(async (item) => {
+    const newIds = ids
+      .map((item) => this.convertStringToNumberArray(item))
+      .reduce((acc, key) => {
+        return [...acc, ...key];
+      });
+
+    const uniqueArray = newIds.filter(function (item, pos, self) {
+      return self.indexOf(item) == pos;
+    });
+
+    const result = await Promise.all(
+      uniqueArray.map(async (item) => {
         const product = await this.eyewearRepository.findOne({
           relations: {
             brand: true,
@@ -108,13 +110,9 @@ export class SuggestionService {
           },
         });
         return product;
-        // test.push(product);
       }),
     );
-    // });
-
-    console.log(test);
-    return [];
+    return result;
   }
 
   calDistance(problemValue: number, caseValue: number) {

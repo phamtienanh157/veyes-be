@@ -5,11 +5,11 @@ import { LimitCount } from 'src/common/constants';
 import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
 import { Repository } from 'typeorm';
 import { CreateEyewearDto } from './dto/create-eyewear.dto';
-import { Brand } from './entity/brand.entity';
+import { Brand } from '../brand/entity/brand.entity';
 import ColorCollection from './entity/colorCollection.entity';
 import { Eyewear } from './entity/eyewear.entity';
 import ImageCollection from './entity/imageCollection.entity';
-import Type from './entity/type.entity';
+import Type from '../type/entity/type.entity';
 import { IEyewearRes, ISaveEyewearRes } from './eyewear.types';
 
 const removeAccents = (text: string) => {
@@ -83,7 +83,7 @@ export class EyewearService {
     }
     const page = +pageParam || 1;
     const limit = +limitParam || LimitCount;
-    const pageCount = list.length / limit;
+    const totalPages = Math.round(list.length / limit);
 
     let res = [];
 
@@ -91,9 +91,15 @@ export class EyewearService {
     const end = start + limit;
     res = list.slice(start, end);
 
+    const newProducts = ([...list].sort(
+      (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
+    ).length = 4);
+
     return {
-      listProducts: res,
-      pageCount,
+      listProduct: res,
+      totalPages,
+      limit,
+      newProducts,
     };
   }
 

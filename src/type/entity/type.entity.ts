@@ -5,22 +5,21 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Order } from '../../order/entity/order.entity';
+import { Eyewear } from '../../eyewear/entity/eyewear.entity';
 
 @Entity()
-export class Shipment {
+class Type {
   @PrimaryGeneratedColumn()
   public id: number;
 
   @Column()
-  public methodName: string;
+  public name: string;
 
-  @Column()
-  public price: number;
-
-  @OneToMany(() => Order, (order: Order) => order.shipment)
-  public order: Order[];
+  @OneToMany(() => Eyewear, (eyewear: Eyewear) => eyewear.type)
+  public eyewear: Eyewear[];
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 }
+
+export default Type;

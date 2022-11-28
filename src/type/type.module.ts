@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import Type from 'src/eyewear/entity/type.entity';
+import Type from 'src/type/entity/type.entity';
 import { TypeController } from './type.controller';
 import { TypeService } from './type.service';
 

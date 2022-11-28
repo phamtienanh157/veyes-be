@@ -9,7 +9,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import Type from 'src/eyewear/entity/type.entity';
+import Type from 'src/type/entity/type.entity';
 import { UpdateTypeDto } from './dto/update-type.dto';
 import { RoleGuard } from 'src/auth/guards/roles.guard';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';

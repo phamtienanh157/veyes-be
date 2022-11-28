@@ -2,15 +2,16 @@ import { Comment } from 'src/comment/entity/comment.entity';
 import { CartEyewear } from 'src/order/entity/cartEyewear.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Brand } from './brand.entity';
+import { Brand } from '../../brand/entity/brand.entity';
 import ColorCollection from './colorCollection.entity';
 import ImageCollection from './imageCollection.entity';
-import Type from './type.entity';
+import Type from '../../type/entity/type.entity';
 
 @Entity()
 export class Eyewear {
@@ -61,4 +62,7 @@ export class Eyewear {
 
   @OneToMany(() => Comment, (comment: Comment) => comment.eyewear)
   comment: Comment[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
 }
