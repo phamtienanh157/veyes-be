@@ -43,4 +43,4 @@ export enum ESuggestion {
   material = 'material',
 }
 
-export const LimitCount = 2;
+export const LimitCount = 8;

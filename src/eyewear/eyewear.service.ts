@@ -83,7 +83,7 @@ export class EyewearService {
     }
     const page = +pageParam || 1;
     const limit = +limitParam || LimitCount;
-    const totalPages = Math.round(list.length / limit);
+    const totalPages = Math.ceil(list.length / limit);
 
     let res = [];
 
