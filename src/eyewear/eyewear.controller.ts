@@ -30,12 +30,26 @@ export class EyewearController {
     @Query('page') page: number,
     @Query('limit') limit: number,
   ) {
-    return this.eyewearService.getAll(keyword, brand, type, price, page, limit);
+    return this.eyewearService.getListEyewear(
+      keyword,
+      brand,
+      type,
+      price,
+      page,
+      limit,
+    );
+  }
+
+  @Get('all')
+  @HttpCode(200)
+  async getAll() {
+    return this.eyewearService.getAll();
   }
 
   @Get('item')
-  getEyewearByCode(@Query('code') code: string) {
-    return this.eyewearService.getOneByCode(code);
+  getEyewearByCode(@Query('code') code: string, @Query('id') id: number) {
+    if (code) return this.eyewearService.getOneByCode(code);
+    return this.eyewearService.getOneById(id);
   }
 
   @Post()
