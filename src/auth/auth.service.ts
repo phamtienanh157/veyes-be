@@ -57,14 +57,13 @@ export class AuthService {
   async signUp(authCredentialsDto: AuthCredentialsDto): Promise<ISignUpRes> {
     const { username, password, email } = authCredentialsDto;
 
+    const userExist = await this.usersRepository.findOneBy({ username });
+    const emailExist = await this.usersRepository.findOneBy({ email });
+
+    if (userExist || emailExist) {
+      throw new BadRequestException('Tài khoản đã tồn tại!');
+    }
     try {
-      const userExist = await this.usersRepository.findOneBy({ username });
-      const emailExist = await this.usersRepository.findOneBy({ email });
-
-      if (userExist || emailExist) {
-        throw new BadRequestException('Tài khoản đã tồn tại!');
-      }
-
       const hashedPassword = await this.hashPassword(password);
       const user = await this.usersRepository.save({
         username,
@@ -114,12 +113,11 @@ export class AuthService {
 
   async resetPassword(resetPasswordDto: ResetPasswordDto) {
     const { email } = resetPasswordDto;
+    const user = await this.usersRepository.findOneBy({ email });
+    if (!user) {
+      throw new BadRequestException('Email không tồn tại!');
+    }
     try {
-      const user = await this.usersRepository.findOneBy({ email });
-      if (!user) {
-        throw new BadRequestException('Email không tồn tại!');
-      }
-
       const randomPass = Math.random().toString(36).slice(-8);
       await this.mailService.resetPassword(email, randomPass);
 

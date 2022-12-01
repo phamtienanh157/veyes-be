@@ -1,4 +1,4 @@
-import { ERole } from 'src/common/constants';
+import { ERole, EStatus } from 'src/common/constants';
 import {
   Column,
   CreateDateColumn,
@@ -34,4 +34,11 @@ export class User {
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
+
+  @Column({
+    type: 'enum',
+    enum: EStatus,
+    default: EStatus.ACTIVE,
+  })
+  status: EStatus;
 }

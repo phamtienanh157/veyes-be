@@ -44,3 +44,8 @@ export enum ESuggestion {
 }
 
 export const LimitCount = 8;
+
+export enum EStatus {
+  ACTIVE,
+  INACTIVE,
+}

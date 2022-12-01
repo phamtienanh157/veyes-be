@@ -35,10 +35,12 @@ export class OrderService {
   ) {}
 
   async createOrder(body: CreateOrderDto, userId: number) {
-    const { totalPrice, paymentId, shipmentId, cart, customer } = body;
+    const { totalPrice, paymentId, shipmentId, cart, customer, note } = body;
 
-    const user = await this.userRepository.findOneBy({ id: userId });
-    const thisCustomer = await this.customerRepository.findOneBy({ user });
+    // const user = await this.userRepository.findOneBy({ id: userId });
+    const thisCustomer = await this.customerRepository.findOneBy({
+      user: { id: userId },
+    });
     thisCustomer.address = customer.address;
     thisCustomer.name = customer.name;
     thisCustomer.phoneNumber = customer.phoneNumber;
@@ -72,6 +74,7 @@ export class OrderService {
     order.payment = payment;
     order.shipment = shipment;
     order.customer = thisCustomer;
+    order.note = note;
     return this.orderRepository.save(order);
   }
 

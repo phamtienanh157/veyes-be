@@ -30,6 +30,9 @@ export class CreateOrderDto {
   @ValidateNested({ each: true })
   @Type(() => CartDto)
   cart: CartDto[];
+
+  @IsNumber()
+  note: string | null;
 }
 
 class CartDto {
