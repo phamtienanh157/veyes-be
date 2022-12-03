@@ -40,4 +40,7 @@ export class Order {
 
   @ManyToOne(() => Shipment, (shipment: Shipment) => shipment.order)
   shipment: Shipment;
+
+  @Column({ nullable: true })
+  note: string;
 }

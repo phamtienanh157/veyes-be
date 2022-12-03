@@ -19,7 +19,9 @@ export class AccountService {
 
   async getByUserId(id: number): Promise<IGetUser> {
     const user = await this.userRepository.findOneBy({ id });
-    const customer = await this.customerRepository.findOneBy({ user });
+    const customer = await this.customerRepository.findOneBy({
+      user: { id: id },
+    });
     return {
       ...customer,
       role: user.role,

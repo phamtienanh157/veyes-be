@@ -21,7 +21,7 @@ export class AccountController {
   constructor(private readonly accountService: AccountService) {}
 
   @Get()
-  // @Roles(ERole.USER)
+  @Roles(ERole.USER, ERole.ADMIN)
   @HttpCode(200)
   async getUser(@Request() request) {
     return this.accountService.getByUserId(request.user.id);

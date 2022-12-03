@@ -44,7 +44,7 @@ export class EyewearService {
     private readonly commentRepository: Repository<Comment>,
   ) {}
 
-  async getAll(
+  async getListEyewear(
     keyword: string,
     brandId: number,
     typeId: number,
@@ -52,12 +52,20 @@ export class EyewearService {
     pageParam: number,
     limitParam: number,
   ) {
-    const brand = await this.brandRepository.findOneBy({ id: brandId });
-    const type = await this.typeRepository.findOneBy({ id: typeId });
     let list = await this.eyewearRepository.find({
       where: {
-        brand: brand || false,
-        type: type || false,
+        brand:
+          brandId > 0
+            ? {
+                id: brandId,
+              }
+            : false,
+        type:
+          typeId > 0
+            ? {
+                id: typeId,
+              }
+            : false,
       },
       relations: {
         brand: true,
@@ -83,7 +91,7 @@ export class EyewearService {
     }
     const page = +pageParam || 1;
     const limit = +limitParam || LimitCount;
-    const totalPages = Math.round(list.length / limit);
+    const totalPages = Math.ceil(list.length / limit);
 
     let res = [];
 
@@ -91,9 +99,10 @@ export class EyewearService {
     const end = start + limit;
     res = list.slice(start, end);
 
-    const newProducts = ([...list].sort(
-      (a, b) => a.createdAt.getTime() - b.createdAt.getTime(),
-    ).length = 4);
+    const newProducts = [...list].sort(
+      (a, b) => b.createdAt.getTime() - a.createdAt.getTime(),
+    );
+    newProducts.length = 4;
 
     return {
       listProduct: res,
@@ -103,9 +112,36 @@ export class EyewearService {
     };
   }
 
+  async getAll() {
+    const allProducts = await this.eyewearRepository.find({
+      relations: {
+        brand: true,
+        type: true,
+        colorCollection: true,
+        imageCollection: true,
+      },
+    });
+
+    return {
+      allProducts,
+    };
+  }
+
   async getOneByCode(code: string): Promise<Eyewear> {
     return this.eyewearRepository.findOne({
       where: { code },
+      relations: {
+        brand: true,
+        type: true,
+        colorCollection: true,
+        imageCollection: true,
+      },
+    });
+  }
+
+  async getOneById(id: number): Promise<Eyewear> {
+    return this.eyewearRepository.findOne({
+      where: { id },
       relations: {
         brand: true,
         type: true,
