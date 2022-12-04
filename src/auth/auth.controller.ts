@@ -17,6 +17,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { JWTGuard } from './guards/jwt.guard';
 import { LocalAuthGuard } from './guards/local.guard';
 import { RoleGuard } from './guards/roles.guard';
+import { StatusGuard } from './guards/status.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +39,7 @@ export class AuthController {
   }
 
   @Post('/change-password')
+  @UseGuards(StatusGuard)
   @UseGuards(RoleGuard)
   @UseGuards(JWTGuard)
   @Roles(ERole.USER)

@@ -12,10 +12,12 @@ import {
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { RoleGuard } from 'src/auth/guards/roles.guard';
+import { StatusGuard } from 'src/auth/guards/status.guard';
 import { ERole } from 'src/common/constants';
 import { AccountService } from './account.service';
 import { SaveUserInfoDto } from './dto/save-user-info.dto';
 
+@UseGuards(StatusGuard)
 @UseGuards(RoleGuard)
 @UseGuards(JWTGuard)
 @Controller('account')

@@ -18,6 +18,7 @@ import { RoleGuard } from 'src/auth/guards/roles.guard';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { Roles } from 'src/auth/decorator/roles.decorator';
 import { ERole } from 'src/common/constants';
+import { StatusGuard } from 'src/auth/guards/status.guard';
 
 @UseGuards(RoleGuard)
 @UseGuards(JWTGuard)
@@ -26,6 +27,7 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
+  @UseGuards(StatusGuard)
   @Roles(ERole.USER)
   @HttpCode(200)
   createOrder(
