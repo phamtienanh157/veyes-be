@@ -39,7 +39,6 @@ export class AuthService {
   }
 
   async checkStatusActive(id: number): Promise<boolean> {
-    console.log(id);
     const user = await this.usersRepository.findOneBy({ id });
 
     return user.status === EStatus.ACTIVE;
