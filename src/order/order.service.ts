@@ -12,6 +12,7 @@ import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
 import { Shipment } from '../shipment/entity/shipment.entity';
 import { IGetOrderRes } from './order.types';
+import { helpSearch } from 'src/utils';
 
 @Injectable()
 export class OrderService {
@@ -112,11 +113,32 @@ export class OrderService {
     return list;
   }
 
-  async getListOrder() {
-    const listOrder = await this.orderRepository.find({
+  async getListOrder(keyword: string, pageParam: number) {
+    let listOrder = await this.orderRepository.find({
       order: { createdAt: 'DESC' },
+      relations: {
+        customer: true,
+      },
     });
-    return listOrder;
+    if (keyword) {
+      listOrder = listOrder.filter(
+        (item) =>
+          helpSearch(item.customer.name, keyword) ||
+          helpSearch(item.customer.phoneNumber, keyword),
+      );
+    }
+
+    const limit = 12;
+    const page = +pageParam || 1;
+
+    const totalPages = Math.ceil(listOrder.length / limit);
+    let res = [];
+
+    const start = (page - 1) * limit;
+    const end = start + limit;
+    res = listOrder.slice(start, end);
+
+    return { listOrder: res, totalPages };
   }
 
   async getOrderDetail(id: number) {

@@ -6,7 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { ERole } from 'src/common/constants';
+import { ERole, EStatus } from 'src/common/constants';
 import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import { IJWTPayload, ISignInRes, ISignUpRes } from './auth.interface';
@@ -38,7 +38,14 @@ export class AuthService {
     return await bcrypt.compare(password, storePasswordHash);
   }
 
-  async authentication(username: string, password: string): Promise<any> {
+  async checkStatusActive(id: number): Promise<boolean> {
+    console.log(id);
+    const user = await this.usersRepository.findOneBy({ id });
+
+    return user.status === EStatus.ACTIVE;
+  }
+
+  async authentication(username: string, password: string) {
     const user = await this.usersRepository.findOneBy({ username });
 
     if (!user) {

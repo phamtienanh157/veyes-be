@@ -50,8 +50,8 @@ export class OrderController {
   @Get('getAll')
   @Roles(ERole.ADMIN)
   @HttpCode(200)
-  getAll(): Promise<Order[]> {
-    return this.orderService.getListOrder();
+  getAll(@Query('page') page: number, @Query('keyword') keyword: string) {
+    return this.orderService.getListOrder(keyword, page);
   }
 
   @Get('detail')
@@ -61,7 +61,6 @@ export class OrderController {
   }
 
   @Post('status')
-  // @Roles(ERole.ADMIN)
   @HttpCode(200)
   changeStatus(@Body() body: ChangeStatusDto) {
     return this.orderService.changeStatus(body);

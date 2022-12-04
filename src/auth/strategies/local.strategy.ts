@@ -16,6 +16,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('Tài khoản hoặc mật khẩu không đúng');
     }
 
+    const isActive = await this.authService.checkStatusActive(user.id);
+
+    if (!isActive) {
+      throw new UnauthorizedException('Tài khoản bị khóa');
+    }
+
     return user;
   }
 }

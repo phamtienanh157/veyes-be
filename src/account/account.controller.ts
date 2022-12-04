@@ -3,7 +3,9 @@ import {
   Controller,
   Get,
   HttpCode,
+  Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from '@nestjs/common';
@@ -37,7 +39,14 @@ export class AccountController {
   @Get('all')
   @Roles(ERole.ADMIN)
   @HttpCode(200)
-  async getAll() {
-    return this.accountService.getAll();
+  async getAll(@Query('page') page: number, @Query('keyword') keyword: string) {
+    return this.accountService.getAll(keyword, page);
+  }
+
+  @Post('change-status/:id')
+  @Roles(ERole.ADMIN)
+  @HttpCode(200)
+  async changeStatus(@Param('id') id: number) {
+    return this.accountService.changeStatus(id);
   }
 }

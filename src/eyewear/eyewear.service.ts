@@ -11,19 +11,7 @@ import { Eyewear } from './entity/eyewear.entity';
 import ImageCollection from './entity/imageCollection.entity';
 import Type from '../type/entity/type.entity';
 import { IEyewearRes, ISaveEyewearRes } from './eyewear.types';
-
-const removeAccents = (text: string) => {
-  return text
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D');
-};
-
-const helpSearch = (text: string, keyword: string) => {
-  const temp = removeAccents(keyword).toLocaleLowerCase();
-  return removeAccents(text).toLocaleLowerCase().includes(temp);
-};
+import { helpSearch } from 'src/utils';
 
 @Injectable()
 export class EyewearService {
