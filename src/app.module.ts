@@ -11,6 +11,7 @@ import { OrderModule } from './order/order.module';
 import { ShipmentModule } from './shipment/shipment.module';
 import { SuggestionModule } from './suggestion/suggestion.module';
 import { TypeModule } from './type/type.module';
+import { StatisticModule } from './statistic/statistic.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TypeModule } from './type/type.module';
     ShipmentModule,
     SuggestionModule,
     MailModule,
+    StatisticModule,
   ],
 })
 export class AppModule {}
