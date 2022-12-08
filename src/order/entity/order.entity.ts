@@ -1,5 +1,5 @@
 import { Customer } from 'src/auth/entity/customer.entity';
-import { EOrderStatus } from 'src/common/constants';
+import { EOrderPaid, EOrderStatus } from 'src/common/constants';
 import {
   Column,
   CreateDateColumn,
@@ -43,4 +43,11 @@ export class Order {
 
   @Column({ nullable: true })
   note: string;
+
+  @Column({
+    type: 'enum',
+    enum: EOrderPaid,
+    default: EOrderPaid.NOT_PAID,
+  })
+  isPaid: EOrderPaid;
 }

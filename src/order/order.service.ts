@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Customer } from 'src/auth/entity/customer.entity';
-import { User } from 'src/auth/entity/user.entity';
 import { Eyewear } from 'src/eyewear/entity/eyewear.entity';
+import { helpSearch } from 'src/utils';
 import { Repository } from 'typeorm';
+import { Shipment } from '../shipment/entity/shipment.entity';
 import { ChangeStatusDto } from './dto/change-status.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { Cart } from './entity/cart.entity';
 import { CartEyewear } from './entity/cartEyewear.entity';
 import { Order } from './entity/order.entity';
 import { Payment } from './entity/payment.entity';
-import { Shipment } from '../shipment/entity/shipment.entity';
 import { IGetOrderRes } from './order.types';
-import { helpSearch } from 'src/utils';
 
 @Injectable()
 export class OrderService {
@@ -31,14 +30,11 @@ export class OrderService {
     private readonly cartEyewearRepository: Repository<CartEyewear>,
     @InjectRepository(Customer)
     private readonly customerRepository: Repository<Customer>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
   ) {}
 
   async createOrder(body: CreateOrderDto, userId: number) {
     const { totalPrice, paymentId, shipmentId, cart, customer, note } = body;
 
-    // const user = await this.userRepository.findOneBy({ id: userId });
     const thisCustomer = await this.customerRepository.findOneBy({
       user: { id: userId },
     });
@@ -90,6 +86,9 @@ export class OrderService {
       relations: {
         cart: true,
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
     const list = await Promise.all(
       listOrder.map(async (order) => {
@@ -115,7 +114,6 @@ export class OrderService {
 
   async getListOrder(keyword: string, pageParam: number) {
     let listOrder = await this.orderRepository.find({
-      order: { createdAt: 'DESC' },
       relations: {
         customer: true,
       },

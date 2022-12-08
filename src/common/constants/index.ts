@@ -49,3 +49,8 @@ export enum EStatus {
   INACTIVE,
   ACTIVE,
 }
+
+export enum EOrderPaid {
+  NOT_PAID,
+  PAID,
+}
