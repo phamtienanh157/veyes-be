@@ -33,7 +33,8 @@ export class OrderService {
   ) {}
 
   async createOrder(body: CreateOrderDto, userId: number) {
-    const { totalPrice, paymentId, shipmentId, cart, customer, note } = body;
+    const { totalPrice, paymentId, shipmentId, cart, customer, note, isPaid } =
+      body;
 
     const thisCustomer = await this.customerRepository.findOneBy({
       user: { id: userId },
@@ -58,11 +59,13 @@ export class OrderService {
       const eyewear = await this.eyewearRepository.findOne({
         where: { id: item.eyewearId },
       });
+      eyewear.maxQuantity = eyewear.maxQuantity - item.quantity;
       cartEyewear.quantity = item.quantity;
       cartEyewear.cart = newCart;
       cartEyewear.eyewear = eyewear;
       cartEyewear.colorCode = item.colorCode;
-      this.cartEyewearRepository.save(cartEyewear);
+      await this.cartEyewearRepository.save(cartEyewear);
+      await this.eyewearRepository.save(eyewear);
     });
 
     const order = new Order();
@@ -72,6 +75,7 @@ export class OrderService {
     order.shipment = shipment;
     order.customer = thisCustomer;
     order.note = note;
+    order.isPaid = isPaid;
     return this.orderRepository.save(order);
   }
 

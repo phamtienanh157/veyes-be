@@ -33,6 +33,9 @@ export class CreateOrderDto {
 
   @IsNumber()
   note: string | null;
+
+  @IsNumber()
+  isPaid: number;
 }
 
 class CartDto {
