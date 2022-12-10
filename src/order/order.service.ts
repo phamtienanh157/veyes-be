@@ -121,6 +121,9 @@ export class OrderService {
       relations: {
         customer: true,
       },
+      order: {
+        createdAt: 'DESC',
+      },
     });
     if (keyword) {
       listOrder = listOrder.filter(
