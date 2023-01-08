@@ -33,20 +33,27 @@ export class StatisticService {
         type: true,
       },
     });
+    const originAllProducts = allProducts;
     allProducts = allProducts.filter((item) =>
       this.filterByYear(item.createdAt, year),
     );
     let allCustomers = await this.customerRepository.find({
       relations: { user: true },
     });
+    const originAllCustomers = allCustomers;
     allCustomers = allCustomers.filter((item) =>
       this.filterByYear(item.user.createdAt, year),
     );
     let allOrders = await this.orderRepository.find();
+    const originAllOrders = allOrders;
+
     allOrders = allOrders.filter((item) =>
       this.filterByYear(item.createdAt, year),
     );
     let allOrdersSuccess = allOrders.filter(
+      (item) => item.status === EOrderStatus.COMPLETED,
+    );
+    const originOrdersSuccess = originAllOrders.filter(
       (item) => item.status === EOrderStatus.COMPLETED,
     );
     allOrdersSuccess = allOrdersSuccess.filter((item) =>
@@ -81,10 +88,10 @@ export class StatisticService {
     });
 
     return {
-      productsCount: allProducts.length,
-      customersCount: allCustomers.length,
-      ordersCount: allOrders.length,
-      ordersSuccess: allOrdersSuccess.length,
+      productsCount: originAllProducts.length,
+      customersCount: originAllCustomers.length,
+      ordersCount: originAllOrders.length,
+      ordersSuccess: originOrdersSuccess.length,
       allOrdersByMonth,
       allOrdersSuccessByMonth,
       allCustomerByMonth,
