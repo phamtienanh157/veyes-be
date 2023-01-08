@@ -41,8 +41,12 @@ export class AccountController {
   @Get('all')
   @Roles(ERole.ADMIN)
   @HttpCode(200)
-  async getAll(@Query('page') page: number, @Query('keyword') keyword: string) {
-    return this.accountService.getAll(keyword, page);
+  async getAll(
+    @Query('page') page: number,
+    @Query('keyword') keyword: string,
+    @Query('limit') limit: number,
+  ) {
+    return this.accountService.getAll(keyword, page, limit);
   }
 
   @Post('change-status/:id')

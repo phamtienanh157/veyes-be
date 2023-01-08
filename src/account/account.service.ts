@@ -43,7 +43,7 @@ export class AccountService {
     };
   }
 
-  async getAll(keyword: string, pageParam: number) {
+  async getAll(keyword: string, pageParam: number, limitParam: number) {
     let list = await this.userRepository.find({
       where: { role: ERole.USER },
       relations: {
@@ -69,7 +69,7 @@ export class AccountService {
       id: item.id,
     }));
 
-    const limit = 12;
+    const limit = +limitParam || 12;
     const page = +pageParam || 1;
 
     const totalPages = Math.ceil(temp.length / limit);
