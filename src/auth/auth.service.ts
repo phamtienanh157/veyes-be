@@ -7,7 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { ERole, EStatus } from 'src/common/constants';
-import { MailService } from 'src/mail/mail.service';
 import { Repository } from 'typeorm';
 import { IJWTPayload, ISignInRes, ISignUpRes } from './auth.interface';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
@@ -15,6 +14,7 @@ import { ChangePasswordDto } from './dto/change-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { Customer } from './entity/customer.entity';
 import { User } from './entity/user.entity';
+import emailjs from '@emailjs/nodejs';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +23,6 @@ export class AuthService {
     @InjectRepository(Customer)
     private customerRepository: Repository<Customer>,
     private jwtService: JwtService,
-    private mailService: MailService,
   ) {}
 
   async hashPassword(password: string): Promise<string> {
@@ -125,7 +124,21 @@ export class AuthService {
     }
     try {
       const randomPass = Math.random().toString(36).slice(-8);
-      await this.mailService.resetPassword(email, randomPass);
+
+      const templateParams = {
+        password: randomPass,
+        to_email: email,
+      };
+
+      await emailjs.send(
+        'service_q5e4nk6',
+        'template_w3b9rhb',
+        templateParams,
+        {
+          publicKey: 'wjyyzFjNcSefoOWID',
+          privateKey: 'efqo-3e22RLRWEtHrwKGG',
+        },
+      );
 
       const hashedPassword = await this.hashPassword(randomPass);
 

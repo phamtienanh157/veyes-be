@@ -6,7 +6,6 @@ import { BrandModule } from './brand/brand.module';
 import { CommentModule } from './comment/comment.module';
 import { DatabaseModule } from './database/database.module';
 import { EyewearModule } from './eyewear/eyewear.module';
-import { MailModule } from './mail/mail.module';
 import { OrderModule } from './order/order.module';
 import { ShipmentModule } from './shipment/shipment.module';
 import { SuggestionModule } from './suggestion/suggestion.module';
@@ -26,7 +25,6 @@ import { StatisticModule } from './statistic/statistic.module';
     TypeModule,
     ShipmentModule,
     SuggestionModule,
-    MailModule,
     StatisticModule,
   ],
 })
