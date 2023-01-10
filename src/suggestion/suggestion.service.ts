@@ -80,7 +80,6 @@ export class SuggestionService {
       return b.similarity - a.similarity;
     });
 
-    if (result.length > 5) result.length = 5;
     const ids = result.map((item) => item.suggestion);
     return await this.getProductsById(ids);
   }
@@ -95,6 +94,8 @@ export class SuggestionService {
     const uniqueArray = newIds.filter(function (item, pos, self) {
       return self.indexOf(item) == pos;
     });
+
+    if (uniqueArray.length > 8) uniqueArray.length = 8;
 
     const result = await Promise.all(
       uniqueArray.map(async (item) => {
